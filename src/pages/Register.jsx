@@ -79,7 +79,7 @@ export default function Register() {
     setError('')
     setLoading(true)
     try {
-      const { user } = await register(email, password)
+      await register(email, password)
       await updateDisplayName(`${firstName.trim()} ${lastName.trim()}`)
       setSuccess(true)
       setTimeout(() => navigate('/dashboard'), 1500)

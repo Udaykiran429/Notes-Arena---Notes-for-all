@@ -1,24 +1,22 @@
 import { useState, useRef } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { 
   FiUploadCloud, FiBook, FiBookOpen, FiArrowLeft, 
   FiFileText, FiTrash2, FiAlertCircle, FiCheckCircle 
 } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
-import { db, storage } from '../firebase/config'
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
+import { db } from '../firebase/config'
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import './Upload.css'
 
-const BRANCHES = ['BCA', 'CSE', 'ECE', 'EEE', 'Mechanical']
+const BRANCHES = ['BCA', 'BBA', 'BCOM', 'BSc']
 const SEMESTERS = [
   'Semester 1', 'Semester 2', 'Semester 3', 'Semester 4',
-  'Semester 5', 'Semester 6', 'Semester 7', 'Semester 8'
+  'Semester 5', 'Semester 6'
 ]
 
 export default function Upload() {
   const { currentUser } = useAuth()
-  const navigate = useNavigate()
   const fileInputRef = useRef(null)
 
   // Form states
@@ -35,6 +33,10 @@ export default function Upload() {
   const [progress, setProgress] = useState(0)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+
+  const CLOUD_NAME = 'diby6gmde'
+  const UPLOAD_PRESET = 'notes-arena'
+  const uploadAvailable = false
 
   // Handlers for drag & drop
   const handleDrag = (e) => {
@@ -96,60 +98,81 @@ export default function Upload() {
     setProgress(0)
 
     try {
-      // 1. Upload file to Firebase Storage
-      const fileRef = ref(storage, `notes/${Date.now()}_${file.name}`)
-      const uploadTask = uploadBytesResumable(fileRef, file)
+      // Upload file to Cloudinary (unsigned preset) as raw resource
+      const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/raw/upload`
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('upload_preset', UPLOAD_PRESET)
 
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
-          setProgress(pct)
-        },
-        (err) => {
-          console.error('Storage error:', err)
-          setError('Failed to upload file. Please try again.')
-          setUploading(false)
-        },
-        async () => {
-          // 2. File uploaded successfully, get download URL
-          const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref)
+      await new Promise((resolve, reject) => {
+        const xhr = new XMLHttpRequest()
+        xhr.open('POST', url)
 
-          // 3. Save metadata to Firestore
-          const noteData = {
-            title,
-            branch,
-            semester,
-            subject,
-            description: description.trim(),
-            fileUrl: downloadUrl,
-            fileName: file.name,
-            fileSize: (file.size / (1024 * 1024)).toFixed(2) + ' MB',
-            uploadedBy: {
-              uid: currentUser.uid,
-              email: currentUser.email,
-              displayName: currentUser.displayName || 'Anonymous Student'
-            },
-            createdAt: serverTimestamp(),
-            downloads: 0,
-            likes: 0,
-            views: 0
+        xhr.upload.addEventListener('progress', (evt) => {
+          if (evt.lengthComputable) {
+            const pct = Math.round((evt.loaded / evt.total) * 100)
+            setProgress(pct)
           }
+        })
 
-          await addDoc(collection(db, 'notes'), noteData)
-          
-          setUploading(false)
-          setSuccess(true)
-          
-          // Clear inputs
-          setTitle('')
-          setBranch('')
-          setSemester('')
-          setSubject('')
-          setDescription('')
-          setFile(null)
+        xhr.onreadystatechange = async () => {
+          if (xhr.readyState !== 4) return
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              const res = JSON.parse(xhr.responseText)
+              const secureUrl = res.secure_url
+
+              // Save metadata to Firestore
+              const noteData = {
+                title,
+                branch,
+                semester,
+                subject,
+                description: description.trim(),
+                fileUrl: secureUrl,
+                uploadedBy: {
+                  uid: currentUser.uid,
+                  email: currentUser.email,
+                  displayName: currentUser.displayName || 'Anonymous Student'
+                },
+                downloads: 0,
+                createdAt: serverTimestamp()
+              }
+
+              await addDoc(collection(db, 'notes'), noteData)
+
+              setSuccess(true)
+              // Clear inputs
+              setTitle('')
+              setBranch('')
+              setSemester('')
+              setSubject('')
+              setDescription('')
+              setFile(null)
+              resolve(null)
+            } catch (err) {
+              console.error('Save metadata error:', err)
+              setError('Failed to save note metadata. Please try again.')
+              reject(err)
+            } finally {
+              setUploading(false)
+            }
+          } else {
+            console.error('Cloudinary upload failed:', xhr.responseText)
+            setError('Failed to upload file to Cloudinary. Please try again.')
+            setUploading(false)
+            reject(new Error('Upload failed'))
+          }
         }
-      )
+
+        xhr.onerror = () => {
+          setError('Network error during upload. Please try again.')
+          setUploading(false)
+          reject(new Error('Network error'))
+        }
+
+        xhr.send(formData)
+      })
 
     } catch (err) {
       console.error('Firestore/App error:', err)
@@ -289,8 +312,16 @@ export default function Upload() {
 
               {/* Drag & Drop File Upload */}
               <div className="form-group">
-                <label className="form-label">PDF File Upload *</label>
-                {!file ? (
+                <label className="form-label">This feature willbe updated soon</label>
+                {!uploadAvailable ? (
+                  <div className="drop-zone drop-zone--disabled">
+                    <div className="drop-zone__content">
+                      <FiAlertCircle size={40} className="drop-icon" />
+                      <p className="drop-title">This feature willbe updated soon</p>
+                      <p className="drop-sub">The notes upload feature is temporarily disabled while we improve it. Please check back shortly.</p>
+                    </div>
+                  </div>
+                ) : !file ? (
                   <div
                     className={`drop-zone ${dragActive ? 'drop-zone--active' : ''}`}
                     onDragEnter={handleDrag}
@@ -348,12 +379,14 @@ export default function Upload() {
               <button
                 type="submit"
                 className="btn btn-primary btn-submit"
-                disabled={uploading}
+                disabled={uploading || !uploadAvailable}
               >
                 {uploading ? (
                   <>
                     <div className="spinner" /> Uploading...
                   </>
+                ) : !uploadAvailable ? (
+                  'Feature Coming Soon'
                 ) : (
                   'Publish Notes'
                 )}

@@ -1,8 +1,7 @@
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import SearchBar from '../components/SearchBar'
-import BranchCards from '../components/BranchCards'
-import FeaturedNotes from '../components/FeaturedNotes'
+import GroupNotes from '../components/GroupNotes'
 import Footer from '../components/Footer'
 
 export default function Home() {
@@ -12,8 +11,7 @@ export default function Home() {
       <main>
         <Hero />
         <SearchBar />
-        <BranchCards />
-        <FeaturedNotes />
+        <GroupNotes />
       </main>
       <Footer />
     </>

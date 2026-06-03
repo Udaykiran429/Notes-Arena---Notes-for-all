@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
-  FiBookOpen, FiUpload, FiLogOut, FiUser,
+  FiBookOpen, FiUpload, FiLogOut,
   FiTrendingUp, FiDownload, FiBookmark, FiGrid,
-  FiChevronDown,
 } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import './Dashboard.css'
@@ -18,7 +17,6 @@ const QUICK_STATS = [
 export default function Dashboard() {
   const { currentUser, logout } = useAuth()
   const navigate = useNavigate()
-  const [menuOpen, setMenuOpen] = useState(false)
   const [loggingOut, setLoggingOut] = useState(false)
 
   const initials = currentUser?.displayName
@@ -115,7 +113,7 @@ export default function Dashboard() {
           <h2>Your notes journey starts here</h2>
           <p>Upload your first set of notes or browse the library to get started.</p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 20 }}>
-            <Link to="/#featured" className="btn btn-primary">Browse Notes</Link>
+            <Link to="/#groups" className="btn btn-primary">Browse Notes</Link>
             <Link to="/upload" className="btn btn-ghost">Upload Notes</Link>
           </div>
         </div>

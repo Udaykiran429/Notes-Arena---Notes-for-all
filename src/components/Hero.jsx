@@ -3,7 +3,7 @@ import './Hero.css'
 
 const STATS = [
   { value: '12,000+', label: 'Notes Shared' },
-  { value: '5 Branches', label: 'Covered' },
+  { value: '4 Groups', label: 'Covered' },
   { value: '8,500+', label: 'Students' },
 ]
 
@@ -30,13 +30,13 @@ export default function Hero() {
         </h1>
 
         <p className="hero__subtitle animate-fade-up" style={{ animationDelay: '0.2s' }}>
-          Upload, discover, and download high‑quality academic notes from peers across
-          BCA, CSE, ECE, EEE, and Mechanical — all in one place.
+          Upload, discover, and download high‑quality academic notes for
+          BCA, BBA, BCOM, and BSc — all in one place.
         </p>
 
         {/* CTA Buttons */}
         <div className="hero__ctas animate-fade-up" style={{ animationDelay: '0.3s' }}>
-          <a href="#branches" className="btn btn-primary hero__cta-main" id="hero-browse-btn">
+          <a href="#groups" className="btn btn-primary hero__cta-main" id="hero-browse-btn">
             Browse Notes <FiArrowRight size={18} />
           </a>
           <button className="btn btn-ghost hero__cta-secondary" id="hero-upload-btn">

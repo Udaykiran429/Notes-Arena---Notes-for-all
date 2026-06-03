@@ -1,0 +1,55 @@
+.chat-button {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 1000;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  animation: pulse 3.8s ease-in-out infinite;
+  padding: 12px 16px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 999px;
+  box-shadow: 0 20px 50px rgba(15, 23, 74, 0.18);
+  text-decoration: none;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.chat-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 60px rgba(15, 23, 74, 0.25);
+}
+
+.chat-button__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-button__label {
+  font-weight: 600;
+}
+
+.app-shell {
+  position: relative;
+  min-height: 100vh;
+}
+
+@media (max-width: 640px) {
+  .chat-button {
+    right: 16px;
+    bottom: 16px;
+    padding: 12px 14px;
+    gap: 8px;
+  }
+
+  .chat-button__label {
+    display: none;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: translateY(0) scale(1); box-shadow: 0 20px 40px rgba(139,118,255,0.18); }
+  50% { transform: translateY(-3px) scale(1.02); box-shadow: 0 28px 60px rgba(139,118,255,0.24); }
+}

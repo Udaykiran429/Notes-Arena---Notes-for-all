@@ -1,9 +1,9 @@
-import { FiBookOpen, FiGithub, FiTwitter, FiInstagram, FiMail } from 'react-icons/fi'
+import { FiBookOpen, FiGithub, FiLinkedin, FiMail } from 'react-icons/fi'
 import './Footer.css'
 
 const LINKS = {
   Platform: ['Browse Notes', 'Upload Notes', 'Top Contributors', 'Recent Uploads'],
-  Branches: ['BCA', 'CSE', 'ECE', 'EEE', 'Mechanical'],
+  Groups: ['BCA', 'BBA', 'BCOM', 'BSc'],
   Support: ['About Us', 'FAQ', 'Contact', 'Privacy Policy', 'Terms of Service'],
 }
 
@@ -23,11 +23,18 @@ export default function Footer() {
               The smart way for university students to share, discover, and learn
               from academic notes — together.
             </p>
+            <div className="footer__contact">
+              <p className="footer__contact-title">Contact</p>
+              <p><strong>Uday Kiran</strong></p>
+              <p>Mail: <a href="mailto:boduguudayedu@gmail.com">boduguudayedu@gmail.com</a></p>
+              <p>Mobile: <a href="tel:+919392662420">+91 93926 62420</a></p>
+              <p>BCA student | Aspiring web developer | Integrating AI into web development</p>
+              <p>Founder &amp; Creator, Notes Arena</p>
+            </div>
             <div className="footer__socials">
-              <a href="#" aria-label="GitHub" id="footer-github"><FiGithub size={20} /></a>
-              <a href="#" aria-label="Twitter" id="footer-twitter"><FiTwitter size={20} /></a>
-              <a href="#" aria-label="Instagram" id="footer-instagram"><FiInstagram size={20} /></a>
-              <a href="#" aria-label="Email" id="footer-email"><FiMail size={20} /></a>
+              <a href="https://github.com/Udaykiran429" aria-label="GitHub" id="footer-github" target="_blank" rel="noopener noreferrer"><FiGithub size={20} /></a>
+              <a href="https://www.linkedin.com/in/udaykiran-bodugu-15001b363" aria-label="LinkedIn" id="footer-linkedin" target="_blank" rel="noopener noreferrer"><FiLinkedin size={20} /></a>
+              <a href="mailto:boduguudayedu@gmail.com" aria-label="Email" id="footer-email"><FiMail size={20} /></a>
             </div>
           </div>
 

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   FiBookOpen, FiMenu, FiX, FiUpload, FiLogIn,
-  FiLogOut, FiUser, FiGrid, FiChevronDown,
+  FiLogOut, FiUser, FiGrid, FiChevronDown, FiMessageCircle,
 } from 'react-icons/fi'
 import { useAuth } from '../context/AuthContext'
 import './Navbar.css'
@@ -50,8 +50,7 @@ export default function Navbar() {
 
         {/* Desktop Nav */}
         <nav className="navbar__links">
-          <a href="#branches">Branches</a>
-          <a href="#featured">Featured</a>
+          <a href="#groups">Groups</a>
           <a href="#about">About</a>
         </nav>
 
@@ -59,6 +58,9 @@ export default function Navbar() {
         <div className="navbar__actions">
           {currentUser ? (
             <>
+              <Link to="/chat" className="btn btn-ghost" id="nav-chat-btn">
+                <FiMessageCircle size={16} /> Chat
+              </Link>
               <Link to="/dashboard" className="btn btn-ghost" id="nav-dashboard-btn">
                 <FiGrid size={16} /> Dashboard
               </Link>
@@ -91,6 +93,9 @@ export default function Navbar() {
             </>
           ) : (
             <>
+              <Link to="/chat" className="btn btn-ghost" id="nav-chat-btn">
+                <FiMessageCircle size={16} /> Chat
+              </Link>
               <Link to="/upload" className="btn btn-ghost" id="nav-upload-btn">
                 <FiUpload size={16} /> Upload Notes
               </Link>
@@ -118,12 +123,14 @@ export default function Navbar() {
       {/* Mobile Menu */}
       <div className={`navbar__mobile ${menuOpen ? 'navbar__mobile--open' : ''}`}>
         <nav className="navbar__mobile-links">
-          <a href="#branches" onClick={() => setMenuOpen(false)}>Branches</a>
-          <a href="#featured" onClick={() => setMenuOpen(false)}>Featured</a>
+          <a href="#groups" onClick={() => setMenuOpen(false)}>Groups</a>
           <a href="#about" onClick={() => setMenuOpen(false)}>About</a>
           <div className="mobile-actions">
             {currentUser ? (
               <>
+                <Link to="/chat" className="btn btn-ghost btn-full" onClick={() => setMenuOpen(false)}>
+                  <FiMessageCircle size={16} /> Chat
+                </Link>
                 <Link to="/dashboard" className="btn btn-ghost btn-full" onClick={() => setMenuOpen(false)}>
                   <FiGrid size={16} /> Dashboard
                 </Link>
@@ -133,6 +140,9 @@ export default function Navbar() {
               </>
             ) : (
               <>
+                <Link to="/chat" className="btn btn-ghost btn-full" onClick={() => setMenuOpen(false)}>
+                  <FiMessageCircle size={16} /> Chat
+                </Link>
                 <Link to="/login" className="btn btn-ghost btn-full" onClick={() => setMenuOpen(false)}>
                   <FiLogIn size={16} /> Sign In
                 </Link>
